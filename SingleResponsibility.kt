@@ -17,6 +17,7 @@ open class TaskManager {
     }
 }
 
+/// Now here Task Manager is just responsibile for
 class TaskManager2 {
     fun createTask(name: String) {
         println("Task Created $name")

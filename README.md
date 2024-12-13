@@ -1,38 +1,69 @@
-# SOLID-Concepts
+# SOLID Principles
 
-### This repository is going to take about SOLID concepts.
+This repository discusses SOLID principles in software development, providing clear examples and explanations for each
+principle.
 
-## Singe Responsibility
+---
 
-Each class must have one, and only one, reason to change.
-Like you class NotificationManager,TaskManager and etc. should have its own responsibility.
+## Table of Contents
+
+- [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
+- [Open/Closed Principle (OCP)](#openclosed-principle-ocp)
+- [Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
+- [Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
+- [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
+- [Comparing LSP and ISP](#comparing-lsp-and-isp)
+
+---
+
+## Single Responsibility Principle (SRP)
+
+### Definition:
+
+Each class should have one, and only one, reason to change.
+
+### Key Idea:
+
+- A class should focus on a single responsibility to reduce complexity and improve maintainability.
+
+### Example:
+
+#### Violating SRP:
 
 ```kotlin
-// Here send Notification method break the principle of Single responsibility
 class TaskManager {
     fun createTask(name: String) {
-        println("Task Created $name")
+        println("Task Created: $name")
     }
+
     fun updateTask(name: String) {
-        println("Task Updated $name")
+        println("Task Updated: $name")
     }
+
     fun removeTask(taskId: Int) {
-        println("Task Removed $taskId")
+        println("Task Removed: $taskId")
     }
+
     fun sendNotification() {
         println("Notification Sent")
     }
 }
+```
 
-class TaskManager2 {
+#### Following SRP:
+
+```kotlin
+class TaskManager {
     fun createTask(name: String) {
-        println("Task Created $name")
+        println("Task Created: $name")
     }
+
     fun updateTask(name: String) {
-        println("Task Updated $name")
+        println("Task Updated: $name")
     }
+
     fun removeTask(taskId: Int) {
-        println("Task Removed $taskId")
+        println("Task Removed: $taskId")
     }
 }
 
@@ -43,14 +74,24 @@ class NotificationManager {
 }
 ```
 
-## Open/Closed principle
+---
 
-Software entities (such asclasses and methods) must be open for extension but closed for modification.
+## Open/Closed Principle (OCP)
+
+### Definition:
+
+Software entities (classes, modules, functions) should be open for extension but closed for modification.
+
+### Key Idea:
+
+- Code should be designed to allow new functionality to be added without altering existing code.
+
+### Example:
+
+#### Violating OCP:
 
 ```kotlin
-class Vehicle(
-    type: String
-) {
+class Vehicle(type: String) {
     var vehicleType: String = type
 
     fun accelerateVehicle() {
@@ -63,89 +104,94 @@ class Vehicle(
 }
 ```
 
+#### Following OCP:
+
 ```kotlin
 interface VehicleInterface {
     fun accelerateVehicle()
-    fun breakVehicle()
+    fun brakeVehicle()
 }
 
 class Car : VehicleInterface {
     override fun accelerateVehicle() {
-        println("Increased the speed of Car")
+        println("Car speed increased")
     }
 
-    override fun breakVehicle() {
-        println("Decreased the speed of Car")
+    override fun brakeVehicle() {
+        println("Car speed decreased")
     }
 }
 
 class Truck : VehicleInterface {
     override fun accelerateVehicle() {
-        println("Increased the speed of Truck")
+        println("Truck speed increased")
     }
 
-    override fun breakVehicle() {
-        println("Decreased the speed of Truck")
+    override fun brakeVehicle() {
+        println("Truck speed decreased")
     }
 }
 ```
 
-## Liskov Substitution
+---
 
-Derived classes (or child classes) must be able to use parent class without any error.
-On previous example of OpenClosedPrinciple we have created Vehicle interface, and it had two functions
-accelerateVehicle and breakVehicle. Does each and every vehicle have feature of accelerate???
-answer No. Bicycle don't have this feature. So here we break the Liskov principle by implementing vehicle interface.
+## Liskov Substitution Principle (LSP)
+
+### Definition:
+
+Derived classes must be substitutable for their base classes without altering the behavior of the program.
+
+### Key Idea:
+
+- Subtypes must honor the contracts defined by their parent types.
+
+### Example:
+
+#### Violating LSP:
 
 ```kotlin
-interface Vehicle2 {
-    fun breakVehicle()
-}
-open class AccelerateVehicle : Vehicle2 {
-    override fun breakVehicle() {
-        println("Decrease the speed")
-    }
-    open fun accelerateVehicle() {}
-}
-
-open class PedalVehicle : Vehicle2 {
-    override fun breakVehicle() {
-        println("Decrease the speed")
-    }
-    open fun pedalVehicle() {
-        println("Increase the speed")
+open class Bird {
+    open fun fly() {
+        println("Bird is flying")
     }
 }
 
-
-class Bicycle : PedalVehicle() {
-    override fun pedalVehicle() {
-        println("Increased the speed")
-    }
-
-    override fun breakVehicle() {
-        println("Decreased the speed")
-    }
-}
-
-class Bike : AccelerateVehicle() {
-    override fun accelerateVehicle() {
-        println("Increase the speed of Bike")
-    }
-
-    override fun breakVehicle() {
-        println("Decrease the speed of Bike")
+class Penguin : Bird() {
+    override fun fly() {
+        throw UnsupportedOperationException("Penguins can't fly")
     }
 }
 ```
 
-## Interface Segregation principle
+#### Following LSP:
 
-A class should not be forced to implement interfaces and methods that will not be used.
-Interface Segregation Principle tells us we should not enforce class to implement interface that it does not use.
-Suppose we have created interface of Animal and adds a function of fly. And we create class of Dog with it.
-Does dog can fly? of course not. at least i have not seen flying Dogs? HAHA
-So we must segregate the interface of flying here.
+```kotlin
+open class Bird
+
+open class FlyingBird : Bird() {
+    open fun fly() {
+        println("Bird is flying")
+    }
+}
+
+class Penguin : Bird()
+```
+
+---
+
+## Interface Segregation Principle (ISP)
+
+### Definition:
+
+A class should not be forced to implement interfaces it does not use.
+
+### Key Idea:
+
+- Break down large interfaces into smaller, more specific ones to avoid forcing unnecessary implementations.
+
+### Example:
+
+#### Violating ISP:
 
 ```kotlin
 interface Animal {
@@ -162,51 +208,51 @@ class Dog : Animal {
         println("Dog is swimming")
     }
 }
+```
 
+#### Following ISP:
+
+```kotlin
 interface Animal2 {
     fun eat()
     fun sleep()
-    fun swim()
 }
 
 interface Flyable {
     fun fly()
 }
 
-class Dog2 : Animal2 {
-
+class Dog : Animal2 {
     override fun eat() {
-        TODO("Not yet implemented")
+        println("Dog is eating")
     }
-
     override fun sleep() {
-        TODO("Not yet implemented")
-    }
-
-    override fun swim() {
-        println("Dog is swimming")
+        println("Dog is sleeping")
     }
 }
 ```
 
-## Dependency Inversion Principle
+---
+
+## Dependency Inversion Principle (DIP)
+
+### Definition:
 
 Depend on abstractions rather than concrete implementations.
-It talks about two thing
 
-1. High level module should not depend on low module both should depend on abstraction.
+1. High-level modules should not depend on low-level modules. Both should depend on abstractions.
 2. Abstractions should not depend on details. Details should depend on abstractions.
    Abstraction tells what things will be done and Details tells about how things will be done. Basically abstraction
    achieve through interface or abstract class and Details through concrete class.
 
-Suppose you have repository class OrderRepository and service class OrderService. In your service class you are creating
-instance of OrderRepository just like below...
+- Dependency injection is often used to achieve this principle.
+
+### Example:
+
+#### Violating DIP:
 
 ```kotlin
-data class Order(
-    val id: Int,
-    val name: String
-)
+data class Order(val id: Int, val name: String)
 
 class OrderRepository {
     fun saveOrder(order: Order) {
@@ -223,25 +269,15 @@ class OrderService {
 }
 ```
 
-Breaking Dependency Inversion:
-
-1. Direct Instantiation:
-   The OrderService class directly creates an instance of OrderRepository using OrderRepository().
-   This makes OrderService dependent on the concrete implementation of OrderRepository, tightly coupling these two
-   classes.
-2. No Abstraction:
-   There is no abstraction (e.g., an interface or abstract class) for OrderRepository.
-   The high-level OrderService module depends directly on the low-level implementation OrderRepository, which violates
-   DIP.
+#### Following DIP:
 
 ```kotlin
-
-// Define an abstraction (interface) for OrderRepository
+// Abstraction
 interface OrderRepository {
     fun saveOrder(order: Order)
 }
 
-// A concrete implementation of OrderRepository
+// Implementation
 class OrderRepositoryImpl : OrderRepository {
     override fun saveOrder(order: Order) {
         // Logic to save the order
@@ -258,14 +294,16 @@ class OrderService(private val orderRepository: OrderRepository) {
 }
 ```
 
-### Have you thought that Liskov of Substitution and Interface segregation looks similar
+---
 
-#### Interface Segregation Principle (ISP)
+## Comparing LSP and ISP
 
-Focus: Ensures that interfaces are small, specific, and tailored to the needs of individual clients.
-Goal: Prevents classes from being forced to implement methods they don't need.
+### Interface Segregation Principle (ISP):
 
-Violation Example: Suppose you have a generic interface for all animals:
+- **Focus**: Ensures that interfaces are small, specific, and tailored to the needs of individual clients.
+- **Goal**: Prevents classes from being forced to implement methods they don't need.
+
+#### Example:
 
 ```kotlin
 interface Animal {
@@ -277,39 +315,34 @@ class Dog : Animal {
     override fun fly() {
         throw UnsupportedOperationException("Dogs can't fly")
     }
+
     override fun swim() {
         println("Dog is swimming")
     }
 }
 
-```
-
-Here, the Dog class is forced to implement fly(), which is irrelevant to dogs. ISP suggests splitting the interface:
-
-```kotlin
-interface Swim {
+// Refactored:
+interface Swimmable {
     fun swim()
 }
 
-interface Fly {
+interface Flyable {
     fun fly()
 }
 
-class Dog : Swim {
+class Dog : Swimmable {
     override fun swim() {
         println("Dog is swimming")
     }
 }
-
 ```
 
-##### Liskov Substitution Principle (LSP)
+### Liskov Substitution Principle (LSP):
 
-Focus: Ensures that derived classes can substitute their base classes without breaking the application.
+- **Focus**: Ensures that derived classes can substitute their base classes without breaking the application.
+- **Goal**: Maintains the behavior expected of a base class when used through its derived classes.
 
-Goal: Maintains the behavior expected of a base class when used through its derived classes.
-
-Violation Example: Suppose you have a base class Bird:
+#### Example:
 
 ```kotlin
 open class Bird {
@@ -324,15 +357,9 @@ class Penguin : Bird() {
     }
 }
 
-```
-
-The Penguin class violates LSP because substituting a Penguin for a Bird results in unexpected behavior when calling
-fly().
-
-A better design would refactor Bird into separate hierarchies:
-
-```kotlin
+// Refactored:
 open class Bird
+
 open class FlyingBird : Bird() {
     open fun fly() {
         println("Bird is flying")
@@ -340,7 +367,9 @@ open class FlyingBird : Bird() {
 }
 
 class Penguin : Bird()
-
 ```
 
+---
+
+By adhering to SOLID principles, you can design software that is robust, scalable, and maintainable.
 
