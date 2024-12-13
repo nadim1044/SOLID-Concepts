@@ -1,11 +1,11 @@
 /// Here is example of vehicle that have function to increase the speed of it.
 /// what if you require to add more vehicle?
 /// You are going to modify?? Yes that will break the rule of Open/Closed principle.
-/// So you have refactor the code fulfill the requirement of Open/Closed principle
+/// So you need refactor the code that fulfill the requirement of Open/Closed principle
 class Vehicle(
     type: String
 ) {
-    var vehicleType: String = type
+    private var vehicleType: String = type
 
     fun accelerateVehicle() {
         if (vehicleType == "Car") {
@@ -17,8 +17,8 @@ class Vehicle(
 }
 
 /// Here it is...
-/// Now you dont't need to do any change.
-/// Your vehicle interface provide abstraction and you can create the as much as
+/// Now you don't need to do any change.
+/// Your vehicle interface provide abstraction, and you can create the as much as
 /// vehicle you want without modifying existing classes.
 interface VehicleInterface {
     fun accelerateVehicle()
